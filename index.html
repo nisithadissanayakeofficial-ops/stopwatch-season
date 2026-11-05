@@ -3,258 +3,338 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Stopwatch Season | Student racing, explained</title>
-<meta name="description" content="How student Formula teams build a race car in a year and get judged on a stopwatch. An interactive guide to the 1,000 points.">
+<title>Stopwatch Season | Student racing setup lab and arcade</title>
+<meta name="description" content="Tune a student race car, run a simulated lap, climb the leaderboard and turn the result into a post.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏁</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{
-  color-scheme:light dark;
-  --bg:#e9edf2; --panel:#fff; --ink:#0d1a33; --muted:#52607a; --line:#cdd5e0;
-  --blue:#1b45f0; --yellow:#ffd21f; --purple:#7b2ff2; --green:#12b45a; --on-blue:#fff;
-  --display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
-  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-}
-@media (prefers-color-scheme:dark){
-  :root{--bg:#0a1122; --panel:#121c34; --ink:#eef2fb; --muted:#9aa8c4; --line:#25324f; --blue:#5b7dff; --on-blue:#07102a}
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.6 var(--body);-webkit-font-smoothing:antialiased}
-a{color:inherit}
-:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
-.wrap{max-width:1120px;margin:0 auto;padding:0 1.25rem}
-h1,h2,h3{font-family:var(--display);font-weight:900;line-height:.92;margin:0;letter-spacing:.005em}
-h1{font-size:clamp(3.4rem,10.5vw,7.4rem)}
-h2{font-size:clamp(2.4rem,6vw,4rem);margin-bottom:.9rem}
-p{margin:0 0 1rem;max-width:62ch}
-.lede{color:var(--muted);font-size:1.15rem}
-.num{font-variant-numeric:tabular-nums}
-
-/* nav */
+:root{color-scheme:light dark;--bg:#e9edf2;--panel:#fff;--ink:#0d1a33;--muted:#52607a;--line:#cdd5e0;--blue:#1b45f0;--yellow:#ffd21f;--purple:#7b2ff2;--green:#12b45a;--on-blue:#fff;--slow:#1b45f0;--fast:#ffd21f;
+--display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;--body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+@media(prefers-color-scheme:dark){:root{--bg:#0a1122;--panel:#121c34;--ink:#eef2fb;--muted:#9aa8c4;--line:#25324f;--blue:#5b7dff;--on-blue:#07102a;--slow:#3d5bff}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.55 var(--body);-webkit-font-smoothing:antialiased}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 1.25rem}
+h1,h2,h3{font-family:var(--display);font-weight:900;line-height:.92;margin:0}
+h1{font-size:clamp(3rem,8.5vw,6.2rem)}h2{font-size:clamp(2.2rem,5vw,3.3rem);margin-bottom:.6rem}h3{font-size:1.5rem}
+p{margin:0 0 1rem;max-width:62ch}.lede{color:var(--muted);font-size:1.1rem}.num{font-variant-numeric:tabular-nums}
 header{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-nav{display:flex;align-items:center;justify-content:space-between;height:60px}
-.brand{font:900 1.5rem var(--display);text-decoration:none;display:flex;align-items:center;gap:.55rem}
-.brand i{width:14px;height:14px;background:conic-gradient(var(--ink) 25%,transparent 0 50%,var(--ink) 0 75%,transparent 0);background-size:7px 7px;border:2px solid var(--ink)}
-nav ul{display:flex;gap:1.6rem;list-style:none;margin:0;padding:0;font-weight:500;font-size:.95rem}
-nav ul a{text-decoration:none;color:var(--muted)}
-nav ul a:hover{color:var(--ink)}
-@media(max-width:640px){nav ul li:not(:last-child){display:none}}
+nav{display:flex;align-items:center;justify-content:space-between;height:58px}
+.brand{font:900 1.45rem var(--display);text-decoration:none;color:inherit}
+nav ul{display:flex;gap:1.5rem;list-style:none;margin:0;padding:0;font-size:.95rem;font-weight:500}nav a{color:var(--muted);text-decoration:none}nav a:hover{color:var(--ink)}
+.hero{padding:clamp(2rem,5vw,3.5rem) 0 1.5rem}
+section{padding:1.2rem 0 clamp(2.5rem,6vw,4rem)}
+.lab{display:grid;grid-template-columns:1.5fr 1fr;gap:1.2rem;align-items:start}
+@media(max-width:900px){.lab,.two{grid-template-columns:1fr!important}}
+.card{background:var(--panel);border:1px solid var(--line);padding:1.1rem}
+.stage{position:relative;border-top:6px solid var(--blue);padding:0}
+#map{width:100%;height:clamp(300px,52vw,470px);display:block}
+.hud{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;gap:1rem;padding:.9rem 1rem;pointer-events:none}
+.hud .lap{font:900 clamp(2.4rem,6vw,3.6rem)/1 var(--display)}.hud small{display:block;color:var(--muted);font-size:.8rem}
+.hud .spd{text-align:right;font:900 clamp(1.8rem,4vw,2.6rem)/1 var(--display)}
+.secs{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:0 1rem 1rem}
+.secs div{background:var(--line);color:var(--muted);padding:.4rem .6rem;font-size:.8rem;font-weight:600;transition:background .2s}.secs b{display:block;font:900 1.2rem/1.1 var(--display)}
+.secs .p{background:var(--purple);color:#fff}.secs .g{background:var(--green);color:#fff}.secs .y{background:var(--yellow);color:#1a1400}
+fieldset{border:0;margin:0;padding:0;min-width:0}fieldset:disabled{opacity:.55}
+.ctl{display:grid;gap:.95rem}
+.ctl label{display:flex;justify-content:space-between;font-weight:600;font-size:.95rem}.ctl output{font-variant-numeric:tabular-nums;color:var(--blue)}
+input[type=range]{width:100%;accent-color:var(--blue);margin:.25rem 0 0}
+.seg{display:grid;grid-auto-flow:column;gap:5px}
+button{font:inherit;cursor:pointer}
+.b{background:var(--bg);color:var(--ink);border:1px solid var(--line);padding:.5rem .7rem;font-weight:600;border-radius:4px}
+.b:hover{border-color:var(--ink)}.b[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.go{width:100%;background:var(--blue);color:var(--on-blue);border:0;padding:.95rem;font:900 1.5rem var(--display);letter-spacing:.02em;border-radius:4px}.go:hover{filter:brightness(1.08)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin:1.2rem 0}
+@media(max-width:700px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stats div{background:var(--panel);border:1px solid var(--line);padding:.7rem .9rem;font-size:.85rem;color:var(--muted)}
+.stats b{display:block;font:900 2rem/1.1 var(--display);color:var(--ink)}
+#trace{width:100%;height:190px;display:block}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.2rem}
+.tr{display:grid;grid-template-columns:2rem 1fr auto 4.5rem;gap:.6rem;align-items:center;padding:.5rem .6rem;border-bottom:1px solid var(--line);font-size:.95rem}
+.tr.me{background:color-mix(in srgb,var(--yellow) 35%,transparent);font-weight:600}.tr .n{font:900 1.2rem var(--display);color:var(--muted)}.tr .gap{text-align:right;color:var(--muted)}
+button.tr{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:2rem 1fr auto 4.5rem;gap:.6rem;align-items:center;padding:.5rem .6rem;border-bottom:1px solid var(--line);font-size:.95rem;width:100%}
+button.tr:hover{background:var(--bg)}button.tr:focus-visible{outline:3px solid var(--blue)}
+.empty{color:var(--muted);padding:.8rem .2rem}
+.nm{width:100%;font:inherit;padding:.6rem .7rem;border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--ink);margin-top:.25rem}
+.nm.err{border-color:#c62828;box-shadow:0 0 0 2px #c6282855}
+.hint{font-size:.85rem;color:var(--muted);margin:.3rem 0 0;min-height:1.3rem}
+.b.sm{font-size:.85rem;padding:.35rem .6rem;margin-top:.8rem}
+.cap{white-space:pre-wrap;background:var(--bg);border:1px dashed var(--line);padding:1rem;margin:.9rem 0;min-height:5.5rem}
+.row{display:flex;gap:.5rem;flex-wrap:wrap}
+footer{padding:1.5rem 0;color:var(--muted);font-size:.88rem}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 
-/* hero */
-.hero{padding:clamp(2.5rem,7vw,5.5rem) 0 clamp(3rem,7vw,5rem)}
-.hero .wrap{display:grid;gap:2.5rem;grid-template-columns:1.25fr 1fr;align-items:end}
-@media(max-width:860px){.hero .wrap{grid-template-columns:1fr}}
-.hero h1 span{display:block}
-.hero h1 .dim{color:var(--blue)}
-.btn{display:inline-block;background:var(--blue);color:var(--on-blue);font-weight:600;padding:.85rem 1.4rem;text-decoration:none;border-radius:4px;transition:transform .15s}
-.btn:hover{transform:translateY(-2px)}
-.timing{background:var(--panel);border:1px solid var(--line);border-top:6px solid var(--blue);padding:1.4rem 1.4rem 1.2rem;box-shadow:0 14px 30px -18px rgba(13,26,51,.45)}
-.timing small{color:var(--muted);font-size:.9rem}
-.lap{font:900 clamp(3.4rem,9vw,5.4rem)/1 var(--display);letter-spacing:.01em;margin:.2rem 0 1rem}
-.sectors{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.sectors div{padding:.55rem .6rem;background:var(--line);color:var(--muted);font-weight:600;font-size:.85rem;transition:background .25s,color .25s}
-.sectors b{display:block;font:900 1.4rem/1.1 var(--display);letter-spacing:.02em}
-.sectors .p{background:var(--purple);color:#fff}
-.sectors .g{background:var(--green);color:#fff}
-.sectors .y{background:var(--yellow);color:#1a1400}
-.timing p{margin:1rem 0 0;font-size:.92rem;color:var(--muted)}
-
-/* sections */
-section{padding:clamp(3rem,7vw,5.5rem) 0}
-.alt{background:var(--panel);border-block:1px solid var(--line)}
-
-/* points */
-.board{display:grid;grid-template-columns:1.2fr 1fr;gap:2rem;align-items:start;margin-top:2rem}
-@media(max-width:860px){.board{grid-template-columns:1fr}}
-.rows{display:grid;gap:6px}
-.row{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:2rem 1fr 3.2rem;align-items:center;gap:.7rem;background:var(--bg);padding:.4rem .8rem .4rem .4rem;border:1px solid var(--line);position:relative;overflow:hidden}
-.row:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
-.row .pos{font:900 1.3rem var(--display);text-align:center;color:var(--muted)}
-.row .name{position:relative;z-index:1;font-weight:600}
-.row .pts{position:relative;z-index:1;text-align:right;font-weight:600}
-.row .fill{position:absolute;inset:0 auto 0 0;width:calc(var(--w)*1%);background:color-mix(in srgb,var(--blue) 22%,transparent);border-right:3px solid var(--blue);transition:width .7s cubic-bezier(.2,.8,.2,1)}
-.row.dyn .fill{background:color-mix(in srgb,var(--yellow) 40%,transparent);border-right-color:var(--yellow)}
-.row[aria-pressed=true]{border-color:var(--ink);background:var(--panel)}
-.row[aria-pressed=true] .name{font-weight:600;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
-.js .row .fill{width:0}
-.js .board.on .row .fill{width:calc(var(--w)*1%)}
-.detail{background:var(--panel);border:1px solid var(--line);padding:1.6rem;position:sticky;top:80px}
-.alt .detail{background:var(--bg)}
-.detail h3{font-size:2.6rem;margin-bottom:.5rem}
-.detail .big{font:900 4.5rem/1 var(--display);color:var(--blue)}
-.tag{display:inline-block;font-size:.85rem;font-weight:600;padding:.15rem .6rem;border-radius:99px;background:var(--line);margin-bottom:.8rem}
-.split{display:flex;gap:1.5rem;margin-top:1.4rem;flex-wrap:wrap;font-size:.95rem;color:var(--muted)}
-.split b{color:var(--ink);font:900 1.6rem var(--display);margin-right:.25rem}
-
-/* run sheet */
-.sheet{margin-top:2rem;border-top:2px solid var(--ink)}
-.slot{display:grid;grid-template-columns:9rem 1fr 1fr;gap:1.2rem;padding:1.3rem 0;border-bottom:1px solid var(--line)}
-.slot h3{font-size:2rem}
-.slot h3 small{display:block;font:500 .9rem var(--body);color:var(--muted);margin-top:.35rem}
-.slot ul{margin:0;padding-left:1.1rem}
-.slot li{margin-bottom:.35rem}
-.slot .kpi{color:var(--muted);font-size:.95rem}
-.slot .kpi b{color:var(--ink)}
-@media(max-width:760px){.slot{grid-template-columns:1fr;gap:.6rem}}
-
-/* closing */
-.close{background:var(--ink);color:var(--bg)}
-.close p{color:color-mix(in srgb,var(--bg) 75%,transparent)}
-.close h2{color:var(--yellow);max-width:14ch}
-.close .btn{background:var(--yellow);color:#1a1400}
-footer{padding:1.6rem 0;color:var(--muted);font-size:.9rem}
-@media(prefers-color-scheme:dark){.close{background:#050a16;color:var(--ink)}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+.arc{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:1.2rem}
+@media(max-width:980px){.arc{grid-template-columns:1fr}}
+.arc .card{display:flex;flex-direction:column;gap:.7rem}.arc h3{font-size:1.8rem}.arc p{margin:0}.m{color:var(--muted)}
+.lights{display:flex;gap:.6rem;justify-content:center;padding:1rem;background:#0d1a33;border-radius:6px}
+.lights i{width:clamp(30px,8vw,46px);aspect-ratio:1;border-radius:50%;background:#2a3350}.lights i.on{background:#ff2a2a;box-shadow:0 0 16px #ff2a2a}
+.msg{font:900 1.8rem/1.1 var(--display);min-height:2.1rem}
+#sl{width:100%;max-width:340px;aspect-ratio:3/4;display:block;margin:0 auto;background:var(--bg);border:1px solid var(--line);touch-action:manipulation}
+.opt{display:block;width:100%;text-align:left;margin-bottom:.4rem}.opt.ok{background:var(--green);color:#fff;border-color:var(--green)}.opt.no{background:#c62828;color:#fff;border-color:#c62828}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.7rem;margin-top:1rem}
+.badge{padding:.8rem;border:1px solid var(--line);background:var(--panel);opacity:.6}.badge.on{opacity:1;border-top:5px solid var(--yellow)}
+.badge b{display:block;font:900 1.3rem var(--display)}.badge span{font-size:.85rem;color:var(--muted)}
 </style>
 </head>
 <body>
-<header>
-  <nav class="wrap" aria-label="Main">
-    <a class="brand" href="#top"><i aria-hidden="true"></i>Stopwatch Season</a>
-    <ul>
-      <li><a href="#points">The 1,000 points</a></li>
-      <li><a href="#weekend">Race weekend</a></li>
-      <li><a href="#follow">Follow along</a></li>
-    </ul>
-  </nav>
-</header>
-
+<header><nav class="wrap" aria-label="Main"><a class="brand" href="#top">Stopwatch Season</a>
+<ul><li><a href="#lab">Setup lab</a></li><li><a href="#board">Leaderboard</a></li><li><a href="#arcade">Arcade</a></li><li><a href="#post">Post it</a></li></ul></nav></header>
 <main id="top">
-<div class="hero">
-  <div class="wrap">
-    <div>
-      <h1><span>Built by</span><span>students.</span><span class="dim">Judged by</span><span class="dim">the clock.</span></h1>
-      <p class="lede" style="margin-top:1.6rem">Every year, thousands of engineering students design, build and race a single-seater from scratch. This is how the competition works, and how to tell its story while it happens.</p>
-      <a class="btn" href="#points">See how the points work</a>
-    </div>
-    <aside class="timing" aria-label="Live timing example">
-      <small>Autocross, run 2</small>
-      <div class="lap num" id="lap" aria-live="off">0:00.000</div>
-      <div class="sectors" id="sectors">
-        <div>Sector 1<b class="num">21.406</b></div>
-        <div>Sector 2<b class="num">24.118</b></div>
-        <div>Sector 3<b class="num">18.794</b></div>
-      </div>
-      <p>Purple is the fastest anyone has gone. Green is a personal best. Yellow means a slower sector. Sample numbers for illustration.</p>
-    </aside>
+<div class="hero"><div class="wrap">
+<h1>Tune it. Run it.<br>Post it.</h1>
+<p class="lede" style="margin-top:1.2rem">A student race car is a pile of trade-offs. Change the setup, run a simulated lap and see where you land against seven rival teams. Then play the paddock arcade, earn badges and turn your best lap into a caption.</p>
+</div></div>
+
+<section id="lab"><div class="wrap">
+<h2>Setup lab</h2>
+<div class="lab">
+ <div>
+  <div class="card stage">
+   <canvas id="map" role="img" aria-label="Top-down track map coloured by speed. Blue is slow, yellow is fast."></canvas>
+   <div class="hud" aria-hidden="true"><div><small>Lap time</small><div class="lap num" id="lap">0:00.000</div></div><div class="spd num"><small>Speed</small><span id="spd">0</span> km/h</div></div>
+   <div class="secs" id="secs"><div>Sector 1<b class="num">-</b></div><div>Sector 2<b class="num">-</b></div><div>Sector 3<b class="num">-</b></div></div>
   </div>
+  <div class="stats" aria-live="polite">
+   <div>Predicted lap<b class="num" id="sPred">-</b></div><div>Versus your best<b class="num" id="sDelta">-</b></div>
+   <div>Top speed<b class="num" id="sTop">-</b></div><div>Average speed<b class="num" id="sAvg">-</b></div>
+  </div>
+  <div class="card"><h3>Speed trace</h3><p style="color:var(--muted);font-size:.9rem;margin:.2rem 0 .6rem">Speed over one lap. Solid is this setup, dashed is your best lap. Dips are corners.</p>
+  <canvas id="trace" role="img" aria-label="Line chart of speed in km/h across the lap"></canvas></div>
+ </div>
+ <div class="card">
+  <fieldset id="ctl" class="ctl">
+   <div><label for="wing">Wing angle <output id="oWing"></output></label><input id="wing" type="range" min="0" max="100" step="1"></div>
+   <div><label for="gear">Final drive ratio <output id="oGear"></output></label><input id="gear" type="range" min="3" max="5" step="0.1"></div>
+   <div><label for="psi">Tyre pressure <output id="oPsi"></output></label><input id="psi" type="range" min="10" max="16" step="0.1"></div>
+   <div><label for="mass">Car mass <output id="oMass"></output></label><input id="mass" type="range" min="240" max="300" step="1"></div>
+   <div><label id="cl">Conditions</label><div class="seg" role="group" aria-labelledby="cl"><button class="b" id="dry" aria-pressed="true">Dry</button><button class="b" id="wet" aria-pressed="false">Wet</button></div></div>
+   <div><label id="pl">Presets</label><div class="seg" role="group" aria-labelledby="pl"><button class="b" data-p="0">Balanced</button><button class="b" data-p="1">Low drag</button><button class="b" data-p="2">Max grip</button></div></div>
+  </fieldset>
+  <div style="margin-top:1.1rem"><label for="pname" style="font-weight:600;font-size:.95rem">Driver or team name</label>
+   <input id="pname" class="nm" type="text" maxlength="20" autocomplete="off" placeholder="Enter your name to join the leaderboard">
+   <p class="hint" id="nhint" aria-live="polite"></p></div>
+  <div class="row" style="margin-top:.4rem"><button class="go" id="run" style="flex:1">Run lap</button></div>
+  <div class="seg" style="margin-top:.6rem" role="group" aria-label="Playback speed"><button class="b" id="r1" aria-pressed="false">Real time</button><button class="b" id="r4" aria-pressed="true">4x speed</button></div>
+  <p style="margin:1rem 0 0;color:var(--muted);font-size:.88rem">More wing grips corners but drags on the straights. A higher drive ratio launches harder but tops out sooner. Tyres have a sweet spot, and it moves in the wet.</p>
+ </div>
+</div></div></section>
+
+<section id="board"><div class="wrap">
+<h2>Leaderboard and lap log</h2>
+<div class="two" style="margin-top:0">
+ <div class="card"><h3>Timing tower</h3><div id="tower"></div><button class="b sm" id="clrBoard">Reset player entries</button></div>
+ <div class="card"><h3>Your laps</h3><p style="color:var(--muted);font-size:.9rem;margin:.2rem 0">Select a lap to reload its setup.</p><div id="log"></div></div>
+</div></div></section>
+
+<section id="arcade"><div class="wrap">
+<h2>Paddock arcade</h2>
+<p class="lede">Three quick games to sharpen your racing instincts. Best scores and badges are saved in this browser.</p>
+<div class="arc">
+ <div class="card"><h3>Race start</h3><p class="m">Five lights come on, then all go out. Press the button the instant they vanish. Press early and it is a jump start.</p>
+  <div class="lights" id="lights" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="msg num" id="rtMsg" aria-live="polite">Ready?</div>
+  <button class="go" id="rtBtn" style="font-size:1.3rem;padding:.7rem">Start</button><small class="m">Best reaction: <b class="num" id="rtBest">-</b></small></div>
+ <div class="card"><h3>Slalom rush</h3><p class="m">Dodge the cones as the pace climbs. Use the arrow keys or A and D, tap the sides of the track, or use the buttons.</p>
+  <canvas id="sl" role="img" aria-label="Driving game: steer a car left and right between three lanes to dodge cones"></canvas>
+  <div class="seg"><button class="b" id="sL" aria-label="Move left">Left</button><button class="b" id="slGo">Start</button><button class="b" id="sR" aria-label="Move right">Right</button></div>
+  <div class="msg num" id="slMsg" aria-live="polite">Score <span id="slScore">0</span></div><small class="m">Best score: <b class="num" id="slBest">-</b></small></div>
+ <div class="card"><h3>Rules quiz</h3><p class="m">Six questions on how Formula Student is scored.</p><div id="qBody"></div><small class="m">Best score: <b class="num" id="qBest">-</b> out of 6</small></div>
 </div>
-
-<section id="points" class="alt">
-  <div class="wrap">
-    <h2>The car is only 675 of the 1,000 points</h2>
-    <p class="lede">In Formula Student, teams earn points in static events, where judges question the design, cost and business case, and dynamic events, where the car actually drives. Select an event to see what it tests.</p>
-    <div class="board" id="board">
-      <div class="rows" id="rows" role="group" aria-label="Events by points"></div>
-      <article class="detail" aria-live="polite">
-        <span class="tag" id="dTag"></span>
-        <h3 id="dName"></h3>
-        <div class="big num" id="dPts"></div>
-        <p id="dText" style="margin-top:.8rem"></p>
-        <div class="split"><span><b class="num">325</b>static points</span><span><b class="num">675</b>dynamic points</span></div>
-      </article>
-    </div>
-  </div>
-</section>
-
-<section id="weekend">
-  <div class="wrap">
-    <h2>A race weekend, post by post</h2>
-    <p class="lede">A competition runs for four or five days, and the audience follows in fragments. This run sheet plans what to publish and when, so the story builds instead of piling up on Sunday night.</p>
-    <div class="sheet">
-      <div class="slot"><h3>Thursday<small>Scrutineering</small></h3>
-        <ul><li>Time-lapse of the car going through technical inspection</li><li>Story poll: will it pass first time?</li></ul>
-        <div class="kpi"><b>Goal:</b> build anticipation. Track story replies and saves.</div></div>
-      <div class="slot"><h3>Friday<small>Static events</small></h3>
-        <ul><li>Carousel: the toughest question the design judges asked</li><li>Team member spotlight, one per post</li></ul>
-        <div class="kpi"><b>Goal:</b> show the brains behind the car. Track shares.</div></div>
-      <div class="slot"><h3>Saturday<small>Dynamic events</small></h3>
-        <ul><li>Live stories from the pit and the track edge</li><li>Short clips of each run, with the time on screen</li></ul>
-        <div class="kpi"><b>Goal:</b> real-time energy. Track reach and story completion.</div></div>
-      <div class="slot"><h3>Sunday<small>Endurance and awards</small></h3>
-        <ul><li>Lap-by-lap updates during the 22 km run</li><li>Result graphic and a thank-you to sponsors</li></ul>
-        <div class="kpi"><b>Goal:</b> the payoff moment. Track total engagement.</div></div>
-      <div class="slot"><h3>Monday<small>Recap</small></h3>
-        <ul><li>Highlight reel under 60 seconds</li><li>Three lessons for next season</li></ul>
-        <div class="kpi"><b>Goal:</b> keep the audience for the next event. Track follows.</div></div>
-    </div>
-  </div>
-</section>
-
-<section id="follow" class="close">
-  <div class="wrap">
-    <h2>Every lap has a story</h2>
-    <p>Behind each result are months of late nights, failed tests and a lot of coffee. Telling that story well is part of the race.</p>
-    <a class="btn" href="#top">Back to the start</a>
-  </div>
-</section>
+<h3 style="margin-top:2.2rem;font-size:2.2rem">Badges <small class="m" style="font:400 1rem var(--body)" id="bc"></small></h3>
+<div class="badges" id="badges"></div>
+</div></section>
+<section id="post"><div class="wrap">
+<h2>Post it</h2>
+<p class="lede">Pick a tone and get a caption built from your real setup and lap.</p>
+<div class="card"><div class="seg" role="group" aria-label="Caption tone" style="max-width:520px"><button class="b" data-t="0" aria-pressed="true">Hype</button><button class="b" data-t="1" aria-pressed="false">Technical</button><button class="b" data-t="2" aria-pressed="false">Behind the scenes</button></div>
+<div class="cap" id="cap" aria-live="polite"></div><div class="row"><button class="b" id="copy">Copy caption</button><span id="copied" role="status" style="align-self:center;color:var(--muted)"></span></div></div>
+</div></section>
 </main>
-
-<footer><div class="wrap">Stopwatch Season is an independent concept site about student racing. Points shown follow the standard Formula Student scoring split.</div></footer>
+<footer><div class="wrap">Stopwatch Season is an independent concept site. The simulator is a simplified lap-time model for fun, not an engineering tool. Rival teams are fictional.</div></footer>
 
 <script>
 (function(){
-  var d=document, h=d.documentElement; h.classList.add('js');
-  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  /* events */
-  var E=[
-    ['Endurance',275,'d','A 22 km race with a driver change halfway. It rewards cars that are reliable as well as quick, which is why it carries the most points.'],
-    ['Design',150,'s','Judges question the engineering choices behind the car. Why this suspension? Why this material? What testing proves it works?'],
-    ['Autocross',125,'d','One timed lap through a tight, twisty track. Precision matters more than top speed.'],
-    ['Acceleration',100,'d','A 75 m straight-line sprint from a standing start. It tests launch, traction and power delivery.'],
-    ['Cost',100,'s','Teams submit a detailed cost report for the car and defend it in front of judges, down to the last bolt.'],
-    ['Efficiency',100,'d','Measures the fuel or energy used during the endurance run. Fast and frugal beats fast alone.'],
-    ['Skidpad',75,'d','Figure-eight circles that measure steady-state grip. A poor setup cannot hide here.'],
-    ['Business plan',75,'s','A short pitch to judges acting as investors: could this car become a real product?']
-  ];
-  var rows=d.getElementById('rows'), btns=[];
-  E.forEach(function(e,i){
-    var b=d.createElement('button'); b.type='button';
-    b.className='row '+(e[2]==='d'?'dyn':'');
-    b.style.setProperty('--w',(e[1]/275*100).toFixed(1));
-    b.setAttribute('aria-pressed','false');
-    b.innerHTML='<span class="pos num">'+(i+1)+'</span><span class="name">'+e[0]+'</span><span class="pts num">'+e[1]+'</span><span class="fill"></span>';
-    b.addEventListener('click',function(){pick(i)});
-    rows.appendChild(b); btns.push(b);
-  });
-  function pick(i){
-    var e=E[i];
-    btns.forEach(function(b,j){b.setAttribute('aria-pressed',j===i)});
-    d.getElementById('dTag').textContent=e[2]==='d'?'Dynamic event':'Static event';
-    d.getElementById('dName').textContent=e[0];
-    d.getElementById('dPts').textContent=e[1]+' pts';
-    d.getElementById('dText').textContent=e[3];
-  }
-  pick(0);
-
-  /* bars animate in when visible */
-  var board=d.getElementById('board');
-  if('IntersectionObserver' in window){
-    new IntersectionObserver(function(en,o){en.forEach(function(x){if(x.isIntersecting){board.classList.add('on');o.disconnect()}})},{threshold:.25}).observe(board);
-  } else board.classList.add('on');
-
-  /* hero lap timer: the one orchestrated moment */
-  var lap=d.getElementById('lap'), secs=d.getElementById('sectors').children;
-  var total=64318, marks=[[21406,'p'],[45524,'g'],[64318,'y']];
-  function fmt(ms){var m=Math.floor(ms/60000),s=((ms%60000)/1000).toFixed(3);return m+':'+(s<10?'0':'')+s}
-  function paint(ms){
-    lap.textContent=fmt(ms);
-    marks.forEach(function(m,i){if(ms>=m[0])secs[i].className=m[1]});
-  }
-  if(reduce){paint(total)}
-  else{
-    var t0=null, dur=3600;
-    (function tick(ts){
-      if(!t0)t0=ts;
-      var p=Math.min((ts-t0)/dur,1);
-      paint(Math.round(total*(1-Math.pow(1-p,2))));
-      if(p<1)requestAnimationFrame(tick);
-    })(performance.now());
-  }
+const $=s=>document.querySelector(s),g=9.81,reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fmt=s=>{const m=Math.floor(s/60),r=(s-m*60).toFixed(3);return m+':'+(r<10?'0':'')+r};
+/* track */
+const C=[[0,0],[260,-10],[330,60],[290,140],[200,150],[170,220],[230,290],[120,330],[20,300],[-40,230],[30,170],[-60,110],[-70,30]].map(p=>[p[0]*.5,p[1]*.5]);
+const T=(function(){const P=[],n=C.length;
+ for(let i=0;i<n;i++){const a=C[(i+n-1)%n],b=C[i],c=C[(i+1)%n],d=C[(i+2)%n];
+  for(let s=0;s<30;s++){const t=s/30,t2=t*t,t3=t2*t;P.push([0,1].map(k=>.5*(2*b[k]+(-a[k]+c[k])*t+(2*a[k]-5*b[k]+4*c[k]-d[k])*t2+(-a[k]+3*b[k]-3*c[k]+d[k])*t3)))}}
+ const L=[0];for(let i=1;i<=P.length;i++){const a=P[i-1],b=P[i%P.length];L.push(L[i-1]+Math.hypot(b[0]-a[0],b[1]-a[1]))}
+ const tot=L[L.length-1],N=Math.round(tot/3),ds=tot/N,pts=[];let j=0;
+ for(let i=0;i<N;i++){const dd=i*ds;while(L[j+1]<dd)j++;const f=(dd-L[j])/(L[j+1]-L[j]),a=P[j],b=P[(j+1)%P.length];pts.push([a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f])}
+ const th=pts.map((p,i)=>{const q=pts[(i+1)%N];return Math.atan2(q[1]-p[1],q[0]-p[0])});
+ let k=th.map((t,i)=>{let d=th[(i+1)%N]-t;d=Math.atan2(Math.sin(d),Math.cos(d));return Math.abs(d)/ds});
+ for(let r=0;r<3;r++){const o=k.slice();k=o.map((_,i)=>{let s=0;for(let w=-3;w<=3;w++)s+=o[(i+w+N)%N];return s/7})}
+ return{pts,k,N,ds,tot}})();
+/* lap simulation: corner limits, then forward and backward passes */
+function sim(s){const{N,ds}=T,opt=s.wet?11.5:12.5,mu=(s.wet?.85:1.3)*Math.max(.7,1-.02*(s.psi-opt)**2),
+ ClA=.3+.022*s.wing,CdA=.7+.03*s.wing,m=s.mass,vg=135/s.gear,F=600*s.gear-700,q=.6;
+ const v=T.k.map(k=>{const d=k-mu*q*ClA/m;return Math.max(4,Math.min(vg,d>1e-6?Math.sqrt(mu*g/d):vg))});
+ const acc=x=>Math.max((Math.min(mu*m*g*.9,7e4/Math.max(x,1),F)-q*CdA*x*x)/m,.2),brk=x=>(mu*(m*g+q*ClA*x*x)+q*CdA*x*x)/m;
+ for(let p=0;p<2;p++){for(let i=0;i<N;i++){const j=(i+1)%N;v[j]=Math.min(v[j],Math.sqrt(v[i]*v[i]+2*acc(v[i])*ds))}
+  for(let i=N-1;i>=0;i--){const j=(i+1)%N;v[i]=Math.min(v[i],Math.sqrt(v[j]*v[j]+2*brk(v[j])*ds))}}
+ const t=[0];for(let i=0;i<N;i++)t.push(t[i]+ds/((v[i]+v[(i+1)%N])/2));
+ return{v,t,time:t[N],s:{...s}}}
+/* state */
+const DEF={wing:40,gear:4,psi:12.5,mass:260,wet:false},PRE=[DEF,{wing:12,gear:3.6,psi:12.5,mass:255,wet:false},{wing:80,gear:4.4,psi:12.5,mass:270,wet:false}];
+let S={...DEF},cur,R=null,run=null,rate=4,best=null,log=[],bestSec=null,lastSec=null,tone=0;
+try{const d=JSON.parse(localStorage.getItem('ssl2')||'null');if(d&&d.best&&d.best.v&&d.best.v.length===T.N&&d.best.t&&d.best.t.length===T.N+1){best=d.best;log=d.log||[];bestSec=d.bestSec;lastSec=d.lastSec}}catch(e){}
+const save=()=>{try{localStorage.setItem('ssl2',JSON.stringify({best,log,bestSec,lastSec}))}catch(e){}};
+/* player names and per-name best laps */
+let board={},player='';
+try{const d=JSON.parse(localStorage.getItem('ssb')||'null');if(d){board=d.board||{};player=d.player||''}}catch(e){}
+const saveB=()=>{try{localStorage.setItem('ssb',JSON.stringify({board,player}))}catch(e){}};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const cleanName=s=>s.replace(/\s+/g,' ').trim().slice(0,20);
+const nkey=s=>s.toLowerCase();
+const ref=sim(DEF).time,teams=[['Apex Uni',.965],['Torque Lab',.985],['Redline Eng',1],['Northern Gears',1.02],['Fluxdrive',1.045],['Kestrel Racing',1.08],['Delta Garage',1.12]].map(a=>[a[0],ref*a[1]]);
+/* canvases */
+const cv={};function fit(id){const c=$(id),r=c.getBoundingClientRect(),d=devicePixelRatio||1;c.width=r.width*d;c.height=r.height*d;const x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);cv[id]={x,w:r.width,h:r.height}}
+const xs=T.pts.map(p=>p[0]),ys=T.pts.map(p=>p[1]),bx=Math.min(...xs),by=Math.min(...ys),bw=Math.max(...xs)-bx,bh=Math.max(...ys)-by;
+const idx=(t,a)=>{let lo=0,hi=a.length-2;while(lo<hi){const mid=(lo+hi+1)>>1;a[mid]<=t?lo=mid:hi=mid-1}return lo};
+function drawMap(){const{x,w,h}=cv['#map'],cs=getComputedStyle(document.documentElement),sc=Math.min((w-50)/bw,(h-130)/bh),ox=(w-bw*sc)/2-bx*sc,oy=(h-bh*sc)/2-by*sc+34,P=p=>[p[0]*sc+ox,p[1]*sc+oy];
+ x.clearRect(0,0,w,h);x.lineCap='round';x.lineWidth=Math.max(7,sc*9);
+ const V=run?R.v:cur.v,vm=Math.max(...V),vn=Math.min(...V),sl=cs.getPropertyValue('--slow').trim(),fa=cs.getPropertyValue('--fast').trim();
+ for(let i=0;i<T.N;i++){const a=P(T.pts[i]),b=P(T.pts[(i+1)%T.N]);x.strokeStyle=sl;x.beginPath();x.moveTo(...a);x.lineTo(...b);x.stroke();
+  x.strokeStyle=fa;x.globalAlpha=(V[i]-vn)/(vm-vn);x.beginPath();x.moveTo(...a);x.lineTo(...b);x.stroke();x.globalAlpha=1}
+ const s0=P(T.pts[0]);x.fillStyle=cs.getPropertyValue('--ink');x.fillRect(s0[0]-2,s0[1]-12,4,24);
+ const dot=(i,f,r)=>{const p=P(T.pts[Math.max(0,Math.min(i,T.N-1))]);x.beginPath();x.arc(p[0],p[1],r,0,7);x.fillStyle=f?cs.getPropertyValue('--ink'):'transparent';x.strokeStyle=cs.getPropertyValue('--ink');x.lineWidth=2;f?x.fill():x.stroke()};
+ if(run&&best)dot(idx(run.t,best.t),0,7);dot(run?idx(run.t,R.t):0,1,6)}
+function drawTrace(){const{x,w,h}=cv['#trace'],cs=getComputedStyle(document.documentElement),ink=cs.getPropertyValue('--muted'),bl=cs.getPropertyValue('--blue'),N=T.N,
+ ym=Math.max(...cur.v,...(best?best.v:[0]))*3.6*1.1,X=i=>34+i/N*(w-44),Y=v=>h-18-v*3.6/ym*(h-30);
+ x.clearRect(0,0,w,h);x.font='11px '+cs.getPropertyValue('--body');x.fillStyle=ink;x.strokeStyle=cs.getPropertyValue('--line');x.lineWidth=1;
+ for(let k=0;k<=ym;k+=30){const y=h-18-k/ym*(h-30);x.beginPath();x.moveTo(34,y);x.lineTo(w-8,y);x.stroke();x.fillText(k,4,y+4)}
+ x.fillText('0 m',34,h-3);x.fillText(Math.round(T.tot)+' m',w-48,h-3);
+ const line=(a,col,dash)=>{x.setLineDash(dash);x.strokeStyle=col;x.lineWidth=2;x.beginPath();a.forEach((v,i)=>i?x.lineTo(X(i),Y(v)):x.moveTo(X(i),Y(v)));x.stroke();x.setLineDash([])};
+ if(best)line(best.v,ink,[5,4]);line((run?R:cur).v,bl,[]);
+ if(run){const i=idx(run.t,R.t);x.strokeStyle=cs.getPropertyValue('--ink');x.beginPath();x.moveTo(X(i),6);x.lineTo(X(i),h-18);x.stroke()}}
+/* ui */
+const secEls=[...$('#secs').children];
+function stats(){$('#sPred').textContent=fmt(cur.time);const d=best?cur.time-best.time:null;$('#sDelta').textContent=d===null?'-':(d>0?'+':'-')+Math.abs(d).toFixed(3);
+ $('#sTop').textContent=Math.round(Math.max(...cur.v)*3.6)+' km/h';$('#sAvg').textContent=Math.round(T.tot/cur.time*3.6)+' km/h'}
+function update(){cur=sim(S);$('#oWing').textContent=S.wing+'%';$('#oGear').textContent=S.gear.toFixed(1)+':1';$('#oPsi').textContent=S.psi.toFixed(1)+' psi';$('#oMass').textContent=S.mass+' kg';
+ ['wing','gear','psi','mass'].forEach(k=>$('#'+k).value=S[k]);$('#dry').setAttribute('aria-pressed',!S.wet);$('#wet').setAttribute('aria-pressed',S.wet);
+ stats();drawMap();drawTrace();tower();caption()}
+function tower(){const pk=nkey(player),rows=teams.map(t=>[t[0],t[1],0]);
+ Object.keys(board).forEach(k=>rows.push([board[k].name,board[k].time,k===pk?1:0]));
+ if(!(pk in board))rows.push([(player||'You')+' (preview)',cur.time,1]);
+ const all=rows.sort((a,b)=>a[1]-b[1]);
+ $('#tower').innerHTML=all.map((r,i)=>`<div class="tr num${r[2]?' me':''}"><span class="n">${i+1}</span><span>${esc(r[0])}</span><span>${fmt(r[1])}</span><span class="gap">${i?'+'+(r[1]-all[0][1]).toFixed(3):'Leader'}</span></div>`).join('');
+ return all.findIndex(r=>r[2])+1}
+function logUI(){const L=$('#log');if(!log.length){L.innerHTML='<div class="empty">No laps yet. Press Run lap.</div>';return}
+ L.innerHTML=log.slice(0,8).map((l,i)=>`<button class="tr num" data-i="${i}"><span class="n">${log.length-i}</span><span>W${l.s.wing} G${l.s.gear.toFixed(1)} T${l.s.psi.toFixed(1)} ${l.s.mass}kg${l.s.wet?' wet':''}</span><span>${fmt(l.time)}</span><span class="gap">${best&&l.time===best.time?'Best':'+'+(l.time-best.time).toFixed(3)}</span></button>`).join('')}
+$('#log').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&!run){S={...log[b.dataset.i].s};update()}});
+function caption(){const pos=tower(),pb=board[nkey(player)],t=pb?pb.time:best?best.time:cur.time,s=best?best.s:S,n=log.length;
+ const tr=s.wing>55?'more downforce means more grip in corners but a lower top speed':s.wing<25?'less drag helps on the straights, but the corners get twitchy':'a balanced wing keeps both the straights and the corners honest';
+ $('#cap').textContent=[`🏁 ${player?player+': ':''}${fmt(t)} in the ${s.wet?'wet':'dry'} and P${pos} on the timing tower. Wing at ${s.wing}%, final drive ${s.gear.toFixed(1)}:1. Think you can beat it? #FormulaStudent #StudentRacing`,
+ `Setup notes: wing ${s.wing}%, ${s.gear.toFixed(1)}:1 final drive, tyres at ${s.psi.toFixed(1)} psi, ${s.mass} kg. Result: ${fmt(t)}. The trade-off: ${tr}. #FormulaStudent #Engineering`,
+ `Behind the screen: ${n||'no'} lap${n===1?'':'s'} run so far and the quickest is ${fmt(t)}. Every tenth came from one small setup change. #BuildInPublic #FormulaStudent`][tone]}
+/* run */
+function secTimes(r){const e=[0,T.N/3|0,2*T.N/3|0,T.N];return[0,1,2].map(i=>r.t[e[i+1]]-r.t[e[i]])}
+function start(){if(!player){const n=$('#pname');n.classList.add('err');n.focus();$('#nhint').textContent='Enter a name first so your lap can join the leaderboard.';return}
+ R=sim(S);run={t:0,last:performance.now(),got:[0,0,0]};secEls.forEach((e,i)=>{e.className='';e.innerHTML=`Sector ${i+1}<b>-</b>`});$('#run').textContent='Stop';$('#ctl').disabled=true;requestAnimationFrame(loop)}
+function stop(){run=null;$('#run').textContent='Run lap';$('#ctl').disabled=false;$('#lap').textContent='0:00.000';$('#spd').textContent='0';update()}
+function loop(now){if(!run)return;run.t+=(now-run.last)/1000*rate;run.last=now;
+ if(run.t>=R.time){finish();return}
+ const i=idx(run.t,R.t),e=[T.N/3|0,2*T.N/3|0],st=secTimes(R);
+ e.forEach((k,n)=>{if(!run.got[n]&&run.t>=R.t[k])mark(n,st[n])});
+ $('#lap').textContent=fmt(run.t);$('#spd').textContent=Math.round(R.v[i]*3.6);drawMap();drawTrace();requestAnimationFrame(loop)}
+function mark(n,v){run.got[n]=1;const c=!bestSec||v<bestSec[n]?'p':lastSec&&v<lastSec[n]?'g':'y';secEls[n].className=c;secEls[n].innerHTML=`Sector ${n+1}<b class="num">${v.toFixed(3)}</b>`}
+function finish(){const st=secTimes(R);if(!run.got[2])mark(2,st[2]);const lap=R;
+ bestSec=bestSec?bestSec.map((v,i)=>Math.min(v,st[i])):st;lastSec=st;log.unshift({time:lap.time,s:lap.s});
+ const nb=!best||lap.time<best.time;if(nb)best={time:lap.time,v:lap.v,t:lap.t,s:lap.s};log=log.slice(0,30);save();
+ const pk=nkey(player),old=board[pk];let hint='Lap saved for '+player+'.';
+ if(!old||lap.time<old.time){board[pk]={name:player,time:lap.time,s:lap.s};saveB();hint=old?'New personal best for '+player+'.':player+' has joined the leaderboard.'}
+ else hint='Not a personal best for '+player+' ('+fmt(old.time)+' stands).';
+ $('#nhint').textContent=hint;dispatchEvent(new Event('ssl-update'));
+ run=null;$('#lap').textContent=fmt(lap.time);$('#run').textContent='Run lap';$('#ctl').disabled=false;update();logUI();
+ $('#sDelta').textContent=nb?'New best':'+'+(lap.time-best.time).toFixed(3)}
+/* events */
+['wing','gear','psi','mass'].forEach(k=>$('#'+k).addEventListener('input',e=>{S[k]=+e.target.value;update()}));
+$('#dry').onclick=()=>{S.wet=false;update()};$('#wet').onclick=()=>{S.wet=true;S.psi=Math.min(S.psi,12);update()};
+document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{S={...PRE[b.dataset.p],wet:S.wet};update()});
+$('#run').onclick=()=>run?stop():start();
+const pn=$('#pname');pn.value=player;
+pn.addEventListener('input',()=>{player=cleanName(pn.value);pn.classList.remove('err');$('#nhint').textContent='';saveB();update()});
+pn.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();if(!run)start()}});
+$('#clrBoard').onclick=()=>{if(confirm('Remove all player entries from the leaderboard on this device?')){board={};saveB();update()}};
+$('#r1').onclick=()=>{rate=1;$('#r1').setAttribute('aria-pressed',true);$('#r4').setAttribute('aria-pressed',false)};
+$('#r4').onclick=()=>{rate=4;$('#r4').setAttribute('aria-pressed',true);$('#r1').setAttribute('aria-pressed',false)};
+if(reduce){rate=20}
+document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tone=+b.dataset.t;document.querySelectorAll('[data-t]').forEach(x=>x.setAttribute('aria-pressed',x===b));caption()});
+$('#copy').onclick=async()=>{const t=$('#cap').textContent;try{await navigator.clipboard.writeText(t);$('#copied').textContent='Copied'}catch(e){const r=document.createRange();r.selectNodeContents($('#cap'));getSelection().removeAllRanges();getSelection().addRange(r);$('#copied').textContent='Press Ctrl+C to copy'}setTimeout(()=>$('#copied').textContent='',2200)};
+const refit=()=>{fit('#map');fit('#trace');drawMap();drawTrace()};
+addEventListener('resize',refit);matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{drawMap();drawTrace()});
+fit('#map');fit('#trace');update();logUI();
+})();
+</script>
+<script>
+(function(){
+const $=s=>document.querySelector(s);let A={rt:0,sl:0,qz:0};
+try{Object.assign(A,JSON.parse(localStorage.getItem('ssa')||'{}'))}catch(e){}
+const sv=()=>{try{localStorage.setItem('ssa',JSON.stringify(A))}catch(e){}};
+function ach(){let lb=null;try{const d=JSON.parse(localStorage.getItem('ssl2')||'null');if(d&&d.best)lb=d.best.time}catch(e){}
+ const L=[['Qualifier','Complete a lap in the Setup Lab',lb!==null],['Setup wizard','Set a best lap under 30.3 s',lb!==null&&lb<30.3],['Lightning start','React in under 250 ms',A.rt>0&&A.rt<250],['Slalom ace','Score 200 in Slalom rush',A.sl>=200],['Rule book master','Score 5 or more in the quiz',A.qz>=5]];
+ L.push(['Full grid','Earn all five other badges',L.every(x=>x[2])]);
+ $('#badges').innerHTML=L.map(b=>`<div class="badge${b[2]?' on':''}"><b>${b[2]?'✓ ':''}${b[0]}</b><span>${b[1]}</span></div>`).join('');
+ $('#bc').textContent=L.filter(x=>x[2]).length+' of 6 earned';
+ $('#rtBest').textContent=A.rt?A.rt+' ms':'-';$('#slBest').textContent=A.sl||'-';$('#qBest').textContent=A.qz||'-'}
+addEventListener('ssl-update',ach);
+/* race start */
+const LI=[...document.querySelectorAll('#lights i')];let st='idle',tm=[],t0=0;
+const msg=t=>$('#rtMsg').textContent=t,clr=()=>{tm.forEach(clearTimeout);tm=[]},off=()=>LI.forEach(l=>l.className='');
+function press(){
+ if(st==='idle'||st==='done'){off();st='arm';msg('Lights coming on...');$('#rtBtn').textContent='Wait for it';
+  for(let i=0;i<5;i++)tm.push(setTimeout(()=>LI[i].className='on',600*(i+1)));
+  tm.push(setTimeout(()=>{off();st='go';t0=performance.now();msg('GO!');$('#rtBtn').textContent='Press now!'},3600+Math.random()*1800))}
+ else if(st==='arm'){clr();off();st='done';msg('Jump start! Wait for the lights to go out.');$('#rtBtn').textContent='Try again'}
+ else if(st==='go'){const r=Math.round(performance.now()-t0);st='done';
+  msg(r+' ms. '+(r<200?'Elite reflexes.':r<250?'Very quick.':r<350?'Solid start.':'Keep practising.'));$('#rtBtn').textContent='Go again';
+  if(!A.rt||r<A.rt){A.rt=r;sv()}ach()}}
+$('#rtBtn').addEventListener('pointerdown',e=>{e.preventDefault();press()});
+$('#rtBtn').addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();press()}});
+$('#rtBtn').addEventListener('click',e=>e.preventDefault());
+/* slalom */
+const sc=$('#sl'),sx=sc.getContext('2d'),col=n=>getComputedStyle(document.documentElement).getPropertyValue(n);let G=null,W=300,H=400;
+function fit(){const r=sc.getBoundingClientRect(),d=devicePixelRatio||1;W=r.width;H=r.height;sc.width=W*d;sc.height=H*d;sx.setTransform(d,0,0,d,0,0);draw()}
+function draw(){const lw=W/3;sx.clearRect(0,0,W,H);sx.strokeStyle=col('--line');sx.lineWidth=2;sx.setLineDash([16,16]);sx.lineDashOffset=-(G?G.off:0);
+ for(let i=1;i<3;i++){sx.beginPath();sx.moveTo(i*lw,0);sx.lineTo(i*lw,H);sx.stroke()}sx.setLineDash([]);
+ if(G)G.obs.forEach(o=>{const x=o.l*lw+lw/2;sx.fillStyle=col('--yellow');sx.beginPath();sx.moveTo(x,o.y-20);sx.lineTo(x+16,o.y+14);sx.lineTo(x-16,o.y+14);sx.fill();sx.fillStyle=col('--ink');sx.fillRect(x-18,o.y+14,36,5)});
+ const x=(G?G.lane:1)*lw+lw/2,y=H-60;sx.fillStyle=col('--blue');sx.fillRect(x-16,y-34,32,68);sx.fillStyle=col('--yellow');sx.fillRect(x-3,y-34,6,68);
+ sx.fillStyle=col('--ink');[[-24,-24],[14,-24],[-24,10],[14,10]].forEach(a=>sx.fillRect(x+a[0],y+a[1],10,20))}
+function go(){G={lane:1,obs:[],t:0,sc:0,nx:.5,off:0,last:performance.now()};$('#slScore').textContent=0;$('#slGo').textContent='Restart';requestAnimationFrame(loop)}
+function loop(n){if(!G)return;const dt=Math.min((n-G.last)/1000,.05);G.last=n;G.t+=dt;const sp=(180+G.t*7)*H/420;G.off+=sp*dt;
+ G.nx-=dt;if(G.nx<=0){G.nx=Math.max(.3,.85-G.t*.01);const a=Math.floor(Math.random()*3);G.obs.push({l:a,y:-30});if(G.t>8&&Math.random()<.3)G.obs.push({l:(a+1+Math.floor(Math.random()*2))%3,y:-30})}
+ let hit=false;G.obs.forEach(o=>{o.y+=sp*dt;if(o.l===G.lane&&o.y>H-96&&o.y<H-30)hit=true});
+ const k=G.obs.length;G.obs=G.obs.filter(o=>o.y<H+30);G.sc+=(k-G.obs.length)*10;$('#slScore').textContent=G.sc;
+ if(hit){const f=G.sc;G=null;$('#slMsg').innerHTML='Crashed! Score <span id="slScore">'+f+'</span>';$('#slGo').textContent='Try again';if(f>A.sl){A.sl=f;sv()}ach();draw();return}
+ draw();requestAnimationFrame(loop)}
+const mv=d=>{if(G)G.lane=Math.max(0,Math.min(2,G.lane+d))};
+$('#slGo').onclick=()=>{$('#slMsg').innerHTML='Score <span id="slScore">0</span>';go()};$('#sL').onclick=()=>mv(-1);$('#sR').onclick=()=>mv(1);
+sc.addEventListener('pointerdown',e=>mv(e.offsetX<W/2?-1:1));
+addEventListener('keydown',e=>{if(!G)return;const k=e.key;if(k==='ArrowLeft'||k==='a'){mv(-1);e.preventDefault()}else if(k==='ArrowRight'||k==='d'){mv(1);e.preventDefault()}});
+addEventListener('resize',fit);
+/* quiz */
+const Q=[['How many points are available in total?',['500','750','1,000','1,500'],2,'Static events are worth 325 and dynamic events 675, which adds up to 1,000.'],
+['Which event is worth the most points?',['Design','Autocross','Acceleration','Endurance'],3,'Endurance carries 275 points, more than any other single event.'],
+['How long is the endurance race?',['5 km','11 km','22 km','44 km'],2,'It is 22 km with a driver change, and it tests reliability as much as speed.'],
+['What shape is the skidpad course?',['A straight line','A figure eight','A triangle','A single oval'],1,'Circles driven in a figure eight measure steady-state cornering grip.'],
+['Which of these is a static event?',['Skidpad','Autocross','Business plan','Acceleration'],2,'Static events are judged without driving: Design, Cost and Business plan.'],
+['How long is the acceleration run?',['25 m','75 m','200 m','500 m'],1,'It is a 75 m sprint from a standing start.']];
+let qi=0,qs=0,ans=false;
+function show(){ans=false;const q=Q[qi];$('#qBody').innerHTML=`<p><b>${qi+1} of ${Q.length}.</b> ${q[0]}</p>`+q[1].map((o,i)=>`<button class="b opt" data-i="${i}">${o}</button>`).join('')+'<p class="m" id="qEx" aria-live="polite"></p>'}
+function end(){if(qs>A.qz){A.qz=qs;sv()}ach();$('#qBody').innerHTML=`<div class="msg">You scored ${qs} of ${Q.length}</div><p class="m">${qs>=5?'Rule book master.':qs>=3?'Good, but the rules reward detail.':'Read the rules and try again.'}</p><button class="b" id="qAgain">Play again</button>`}
+$('#qBody').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+ if(b.id==='qAgain'){qi=0;qs=0;show();return}
+ if(b.id==='qNext'){qi++;qi<Q.length?show():end();return}
+ if(ans||b.dataset.i===undefined)return;ans=true;const q=Q[qi],i=+b.dataset.i;
+ document.querySelectorAll('.opt').forEach((o,j)=>{if(j===q[2])o.classList.add('ok');else if(j===i)o.classList.add('no')});
+ if(i===q[2])qs++;$('#qEx').innerHTML=(i===q[2]?'Correct. ':'Not quite. ')+q[3]+'<br><button class="b" id="qNext" style="margin-top:.6rem">'+(qi===Q.length-1?'See score':'Next question')+'</button>'});
+show();ach();fit();
 })();
 </script>
 </body>
