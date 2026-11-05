@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stopwatch Season | Student racing, explained</title>
+<meta name="description" content="How student Formula teams build a race car in a year and get judged on a stopwatch. An interactive guide to the 1,000 points.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏁</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:#e9edf2; --panel:#fff; --ink:#0d1a33; --muted:#52607a; --line:#cdd5e0;
+  --blue:#1b45f0; --yellow:#ffd21f; --purple:#7b2ff2; --green:#12b45a; --on-blue:#fff;
+  --display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0a1122; --panel:#121c34; --ink:#eef2fb; --muted:#9aa8c4; --line:#25324f; --blue:#5b7dff; --on-blue:#07102a}
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.6 var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 1.25rem}
+h1,h2,h3{font-family:var(--display);font-weight:900;line-height:.92;margin:0;letter-spacing:.005em}
+h1{font-size:clamp(3.4rem,10.5vw,7.4rem)}
+h2{font-size:clamp(2.4rem,6vw,4rem);margin-bottom:.9rem}
+p{margin:0 0 1rem;max-width:62ch}
+.lede{color:var(--muted);font-size:1.15rem}
+.num{font-variant-numeric:tabular-nums}
+
+/* nav */
+header{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav{display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand{font:900 1.5rem var(--display);text-decoration:none;display:flex;align-items:center;gap:.55rem}
+.brand i{width:14px;height:14px;background:conic-gradient(var(--ink) 25%,transparent 0 50%,var(--ink) 0 75%,transparent 0);background-size:7px 7px;border:2px solid var(--ink)}
+nav ul{display:flex;gap:1.6rem;list-style:none;margin:0;padding:0;font-weight:500;font-size:.95rem}
+nav ul a{text-decoration:none;color:var(--muted)}
+nav ul a:hover{color:var(--ink)}
+@media(max-width:640px){nav ul li:not(:last-child){display:none}}
+
+/* hero */
+.hero{padding:clamp(2.5rem,7vw,5.5rem) 0 clamp(3rem,7vw,5rem)}
+.hero .wrap{display:grid;gap:2.5rem;grid-template-columns:1.25fr 1fr;align-items:end}
+@media(max-width:860px){.hero .wrap{grid-template-columns:1fr}}
+.hero h1 span{display:block}
+.hero h1 .dim{color:var(--blue)}
+.btn{display:inline-block;background:var(--blue);color:var(--on-blue);font-weight:600;padding:.85rem 1.4rem;text-decoration:none;border-radius:4px;transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.timing{background:var(--panel);border:1px solid var(--line);border-top:6px solid var(--blue);padding:1.4rem 1.4rem 1.2rem;box-shadow:0 14px 30px -18px rgba(13,26,51,.45)}
+.timing small{color:var(--muted);font-size:.9rem}
+.lap{font:900 clamp(3.4rem,9vw,5.4rem)/1 var(--display);letter-spacing:.01em;margin:.2rem 0 1rem}
+.sectors{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.sectors div{padding:.55rem .6rem;background:var(--line);color:var(--muted);font-weight:600;font-size:.85rem;transition:background .25s,color .25s}
+.sectors b{display:block;font:900 1.4rem/1.1 var(--display);letter-spacing:.02em}
+.sectors .p{background:var(--purple);color:#fff}
+.sectors .g{background:var(--green);color:#fff}
+.sectors .y{background:var(--yellow);color:#1a1400}
+.timing p{margin:1rem 0 0;font-size:.92rem;color:var(--muted)}
+
+/* sections */
+section{padding:clamp(3rem,7vw,5.5rem) 0}
+.alt{background:var(--panel);border-block:1px solid var(--line)}
+
+/* points */
+.board{display:grid;grid-template-columns:1.2fr 1fr;gap:2rem;align-items:start;margin-top:2rem}
+@media(max-width:860px){.board{grid-template-columns:1fr}}
+.rows{display:grid;gap:6px}
+.row{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:2rem 1fr 3.2rem;align-items:center;gap:.7rem;background:var(--bg);padding:.4rem .8rem .4rem .4rem;border:1px solid var(--line);position:relative;overflow:hidden}
+.row:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.row .pos{font:900 1.3rem var(--display);text-align:center;color:var(--muted)}
+.row .name{position:relative;z-index:1;font-weight:600}
+.row .pts{position:relative;z-index:1;text-align:right;font-weight:600}
+.row .fill{position:absolute;inset:0 auto 0 0;width:calc(var(--w)*1%);background:color-mix(in srgb,var(--blue) 22%,transparent);border-right:3px solid var(--blue);transition:width .7s cubic-bezier(.2,.8,.2,1)}
+.row.dyn .fill{background:color-mix(in srgb,var(--yellow) 40%,transparent);border-right-color:var(--yellow)}
+.row[aria-pressed=true]{border-color:var(--ink);background:var(--panel)}
+.row[aria-pressed=true] .name{font-weight:600;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
+.js .row .fill{width:0}
+.js .board.on .row .fill{width:calc(var(--w)*1%)}
+.detail{background:var(--panel);border:1px solid var(--line);padding:1.6rem;position:sticky;top:80px}
+.alt .detail{background:var(--bg)}
+.detail h3{font-size:2.6rem;margin-bottom:.5rem}
+.detail .big{font:900 4.5rem/1 var(--display);color:var(--blue)}
+.tag{display:inline-block;font-size:.85rem;font-weight:600;padding:.15rem .6rem;border-radius:99px;background:var(--line);margin-bottom:.8rem}
+.split{display:flex;gap:1.5rem;margin-top:1.4rem;flex-wrap:wrap;font-size:.95rem;color:var(--muted)}
+.split b{color:var(--ink);font:900 1.6rem var(--display);margin-right:.25rem}
+
+/* run sheet */
+.sheet{margin-top:2rem;border-top:2px solid var(--ink)}
+.slot{display:grid;grid-template-columns:9rem 1fr 1fr;gap:1.2rem;padding:1.3rem 0;border-bottom:1px solid var(--line)}
+.slot h3{font-size:2rem}
+.slot h3 small{display:block;font:500 .9rem var(--body);color:var(--muted);margin-top:.35rem}
+.slot ul{margin:0;padding-left:1.1rem}
+.slot li{margin-bottom:.35rem}
+.slot .kpi{color:var(--muted);font-size:.95rem}
+.slot .kpi b{color:var(--ink)}
+@media(max-width:760px){.slot{grid-template-columns:1fr;gap:.6rem}}
+
+/* closing */
+.close{background:var(--ink);color:var(--bg)}
+.close p{color:color-mix(in srgb,var(--bg) 75%,transparent)}
+.close h2{color:var(--yellow);max-width:14ch}
+.close .btn{background:var(--yellow);color:#1a1400}
+footer{padding:1.6rem 0;color:var(--muted);font-size:.9rem}
+@media(prefers-color-scheme:dark){.close{background:#050a16;color:var(--ink)}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header>
+  <nav class="wrap" aria-label="Main">
+    <a class="brand" href="#top"><i aria-hidden="true"></i>Stopwatch Season</a>
+    <ul>
+      <li><a href="#points">The 1,000 points</a></li>
+      <li><a href="#weekend">Race weekend</a></li>
+      <li><a href="#follow">Follow along</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="top">
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <h1><span>Built by</span><span>students.</span><span class="dim">Judged by</span><span class="dim">the clock.</span></h1>
+      <p class="lede" style="margin-top:1.6rem">Every year, thousands of engineering students design, build and race a single-seater from scratch. This is how the competition works, and how to tell its story while it happens.</p>
+      <a class="btn" href="#points">See how the points work</a>
+    </div>
+    <aside class="timing" aria-label="Live timing example">
+      <small>Autocross, run 2</small>
+      <div class="lap num" id="lap" aria-live="off">0:00.000</div>
+      <div class="sectors" id="sectors">
+        <div>Sector 1<b class="num">21.406</b></div>
+        <div>Sector 2<b class="num">24.118</b></div>
+        <div>Sector 3<b class="num">18.794</b></div>
+      </div>
+      <p>Purple is the fastest anyone has gone. Green is a personal best. Yellow means a slower sector. Sample numbers for illustration.</p>
+    </aside>
+  </div>
+</div>
+
+<section id="points" class="alt">
+  <div class="wrap">
+    <h2>The car is only 675 of the 1,000 points</h2>
+    <p class="lede">In Formula Student, teams earn points in static events, where judges question the design, cost and business case, and dynamic events, where the car actually drives. Select an event to see what it tests.</p>
+    <div class="board" id="board">
+      <div class="rows" id="rows" role="group" aria-label="Events by points"></div>
+      <article class="detail" aria-live="polite">
+        <span class="tag" id="dTag"></span>
+        <h3 id="dName"></h3>
+        <div class="big num" id="dPts"></div>
+        <p id="dText" style="margin-top:.8rem"></p>
+        <div class="split"><span><b class="num">325</b>static points</span><span><b class="num">675</b>dynamic points</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="weekend">
+  <div class="wrap">
+    <h2>A race weekend, post by post</h2>
+    <p class="lede">A competition runs for four or five days, and the audience follows in fragments. This run sheet plans what to publish and when, so the story builds instead of piling up on Sunday night.</p>
+    <div class="sheet">
+      <div class="slot"><h3>Thursday<small>Scrutineering</small></h3>
+        <ul><li>Time-lapse of the car going through technical inspection</li><li>Story poll: will it pass first time?</li></ul>
+        <div class="kpi"><b>Goal:</b> build anticipation. Track story replies and saves.</div></div>
+      <div class="slot"><h3>Friday<small>Static events</small></h3>
+        <ul><li>Carousel: the toughest question the design judges asked</li><li>Team member spotlight, one per post</li></ul>
+        <div class="kpi"><b>Goal:</b> show the brains behind the car. Track shares.</div></div>
+      <div class="slot"><h3>Saturday<small>Dynamic events</small></h3>
+        <ul><li>Live stories from the pit and the track edge</li><li>Short clips of each run, with the time on screen</li></ul>
+        <div class="kpi"><b>Goal:</b> real-time energy. Track reach and story completion.</div></div>
+      <div class="slot"><h3>Sunday<small>Endurance and awards</small></h3>
+        <ul><li>Lap-by-lap updates during the 22 km run</li><li>Result graphic and a thank-you to sponsors</li></ul>
+        <div class="kpi"><b>Goal:</b> the payoff moment. Track total engagement.</div></div>
+      <div class="slot"><h3>Monday<small>Recap</small></h3>
+        <ul><li>Highlight reel under 60 seconds</li><li>Three lessons for next season</li></ul>
+        <div class="kpi"><b>Goal:</b> keep the audience for the next event. Track follows.</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="follow" class="close">
+  <div class="wrap">
+    <h2>Every lap has a story</h2>
+    <p>Behind each result are months of late nights, failed tests and a lot of coffee. Telling that story well is part of the race.</p>
+    <a class="btn" href="#top">Back to the start</a>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap">Stopwatch Season is an independent concept site about student racing. Points shown follow the standard Formula Student scoring split.</div></footer>
+
+<script>
+(function(){
+  var d=document, h=d.documentElement; h.classList.add('js');
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* events */
+  var E=[
+    ['Endurance',275,'d','A 22 km race with a driver change halfway. It rewards cars that are reliable as well as quick, which is why it carries the most points.'],
+    ['Design',150,'s','Judges question the engineering choices behind the car. Why this suspension? Why this material? What testing proves it works?'],
+    ['Autocross',125,'d','One timed lap through a tight, twisty track. Precision matters more than top speed.'],
+    ['Acceleration',100,'d','A 75 m straight-line sprint from a standing start. It tests launch, traction and power delivery.'],
+    ['Cost',100,'s','Teams submit a detailed cost report for the car and defend it in front of judges, down to the last bolt.'],
+    ['Efficiency',100,'d','Measures the fuel or energy used during the endurance run. Fast and frugal beats fast alone.'],
+    ['Skidpad',75,'d','Figure-eight circles that measure steady-state grip. A poor setup cannot hide here.'],
+    ['Business plan',75,'s','A short pitch to judges acting as investors: could this car become a real product?']
+  ];
+  var rows=d.getElementById('rows'), btns=[];
+  E.forEach(function(e,i){
+    var b=d.createElement('button'); b.type='button';
+    b.className='row '+(e[2]==='d'?'dyn':'');
+    b.style.setProperty('--w',(e[1]/275*100).toFixed(1));
+    b.setAttribute('aria-pressed','false');
+    b.innerHTML='<span class="pos num">'+(i+1)+'</span><span class="name">'+e[0]+'</span><span class="pts num">'+e[1]+'</span><span class="fill"></span>';
+    b.addEventListener('click',function(){pick(i)});
+    rows.appendChild(b); btns.push(b);
+  });
+  function pick(i){
+    var e=E[i];
+    btns.forEach(function(b,j){b.setAttribute('aria-pressed',j===i)});
+    d.getElementById('dTag').textContent=e[2]==='d'?'Dynamic event':'Static event';
+    d.getElementById('dName').textContent=e[0];
+    d.getElementById('dPts').textContent=e[1]+' pts';
+    d.getElementById('dText').textContent=e[3];
+  }
+  pick(0);
+
+  /* bars animate in when visible */
+  var board=d.getElementById('board');
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(function(en,o){en.forEach(function(x){if(x.isIntersecting){board.classList.add('on');o.disconnect()}})},{threshold:.25}).observe(board);
+  } else board.classList.add('on');
+
+  /* hero lap timer: the one orchestrated moment */
+  var lap=d.getElementById('lap'), secs=d.getElementById('sectors').children;
+  var total=64318, marks=[[21406,'p'],[45524,'g'],[64318,'y']];
+  function fmt(ms){var m=Math.floor(ms/60000),s=((ms%60000)/1000).toFixed(3);return m+':'+(s<10?'0':'')+s}
+  function paint(ms){
+    lap.textContent=fmt(ms);
+    marks.forEach(function(m,i){if(ms>=m[0])secs[i].className=m[1]});
+  }
+  if(reduce){paint(total)}
+  else{
+    var t0=null, dur=3600;
+    (function tick(ts){
+      if(!t0)t0=ts;
+      var p=Math.min((ts-t0)/dur,1);
+      paint(Math.round(total*(1-Math.pow(1-p,2))));
+      if(p<1)requestAnimationFrame(tick);
+    })(performance.now());
+  }
+})();
+</script>
+</body>
+</html>
